@@ -1,0 +1,40 @@
+Building and Securing an Ultrasonic Sensor Node
+
+Research Phase:
+Identify available Arduino libraries for encryption and password protection.
+-PSACrypto, Password
+Investigate Python libraries for handling the corresponding decryption and verification.
+-Scapy, Nmap, Requests, BeautifulSoup, PyCrypto, Scikit-learn, TensorFlow, Pandas, Matplotlib, Cryptography
+
+Preparation:
+Set up your Arduino development environment.
+Install the necessary Python libraries in your development environment.
+
+Data Collection on Arduino:
+Write code to collect sensor data.
+Create a placeholder for a user-defined password or key.
+
+Encryption Implementation on Arduino:
+Select a simple encryption method (e.g., a basic symmetric algorithm).
+Integrate the encryption library into your Arduino code.
+Encrypt the sensor data using the chosen method and the stored key/password.
+
+Transmission Setup:
+Configure the Arduino to send the encrypted data over the chosen communication channel.
+Ensure that the data packet includes any necessary metadata (e.g., an identifier for the encryption method used).
+
+Python Receiver Development:
+Write a Python script to receive the transmitted data.
+Integrate the corresponding decryption library into the Python script.
+
+Decryption Process:
+Implement a function in Python to decrypt the received data using the pre-shared password or key.
+Verify that the decrypted data matches the original sensor readings.
+
+Testing & Debugging:
+Test the entire transmission process, from sensor reading to decryption.
+Log and debug any issues at each stage (data collection, encryption, transmission, decryption).
+
+Documentation:
+Document each step of the process.
+Create a flowchart or diagram that shows the data flow and security measures applied.
