@@ -1,0 +1,90 @@
+#include "Adafruit_Sensor.h" 
+#include "DHT.h"             
+
+// Define Trig pin, Echo pin, and DHTPin:
+#define trigPin 2
+#define echoPin 3
+#define DHTPin 4
+
+// Define DHT sensor type:
+#define DHTType DHT11
+
+// Define variables:
+long duration;
+int distance;
+float speedofsound;
+
+// Create a DHT sensor object:
+DHT dht(DHTPin, DHTType);
+
+// Define password storage
+#define PASSWORD_LENGTH 20  // Maximum password length
+char userPassword[PASSWORD_LENGTH] = "default123"; // Default password
+
+void setup() {
+    // Define inputs and outputs:
+    pinMode(trigPin, OUTPUT); 
+    pinMode(echoPin, INPUT); 
+
+    dht.begin();
+    
+    // Begin Serial communication:
+    Serial.begin(9600);
+    Serial.println("System Ready...");
+    Serial.println("Current Password: " + String(userPassword));
+    Serial.println("Type a new password and press ENTER:");
+}
+
+void loop() {
+    // Check for new password input from Serial Monitor
+    if (Serial.available()) {
+        String newPassword = Serial.readStringUntil('\n'); // Read input until ENTER is pressed
+        newPassword.trim(); // Remove any extra spaces or newline characters
+
+        // Validate password length
+        if (newPassword.length() > 0 && newPassword.length() < PASSWORD_LENGTH) {
+            newPassword.toCharArray(userPassword, PASSWORD_LENGTH);
+            Serial.println("Password Updated Successfully!");
+        } else {
+            Serial.println("Error: Password too long or empty. Try again.");
+        }
+    }
+
+    // Trigger Ultrasonic Sensor
+    digitalWrite(trigPin, LOW);
+    delayMicroseconds(2);
+    digitalWrite(trigPin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trigPin, LOW);
+
+    // Read Echo Pin
+    duration = pulseIn(echoPin, HIGH);
+
+    // Read Temperature & Humidity
+    float temperature = dht.readTemperature();
+    float humidity = dht.readHumidity();
+
+    if (isnan(temperature) || isnan(humidity)) {
+        Serial.println("Error: Failed to read temperature or humidity! Check wiring.");
+        return;
+    }
+
+    // Calculate Speed of Sound
+    speedofsound = 331.3 + (0.606 * temperature);
+    float speedofsound_cm_per_us = speedofsound / 10000.0;
+    distance = (duration * speedofsound_cm_per_us) / 2;
+
+    // Print Results
+    //Serial.print("Current Password: ");
+    Serial.println(userPassword); // Show updated password
+
+    Serial.print("Temperature = ");
+    Serial.print(temperature);
+    Serial.print(" °C, Humidity = ");
+    Serial.print(humidity);
+    Serial.print(" %, Distance = ");
+    Serial.print(distance);
+    Serial.println(" cm");
+
+    delay(500);
+}
